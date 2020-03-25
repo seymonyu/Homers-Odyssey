@@ -10,12 +10,11 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("youhou");
 });
-app.use("/auth", authRouter);
-
 /// in case path is not found, return the 'Not Found' 404 code
 app.use(function(req, res, next) {
   var err = new Error("Not Found");
