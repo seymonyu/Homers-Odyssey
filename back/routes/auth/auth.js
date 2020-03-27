@@ -9,7 +9,8 @@ authRouter.post("/signup", (req, res, next) => {
   const { flash, ...formData } = req.body;
   connection.query("INSERT INTO users SET ?", formData, (err, res) => {
     if (err) {
-      res.status(500).json({ flash: err.message });
+      res.send(console.log(err));
+      //res.status(500).json({ flash: err.message });
       //res.end();
     } else {
       res.status(200).json({ flash: "User has been signed up!" });
