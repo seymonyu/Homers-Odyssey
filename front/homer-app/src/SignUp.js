@@ -4,7 +4,7 @@ class SignUp extends Component {
   state = {
     email: "mon@email.com",
     password: "monPassw0rd",
-    passwordcon: "monPassw0rd",
+    // passwordcon: "monPassw0rd",
     name: "James",
     lastname: "Bond",
     flash: ""
@@ -36,8 +36,8 @@ class SignUp extends Component {
       passwordcon: event.target.value
     });
   }; */
-  handleSubmit = () => {
-    console.log(this.state);
+  handleSubmit = e => {
+    e.preventdefault();
     fetch("/auth/signup", {
       method: "POST",
       headers: new Headers({
@@ -46,10 +46,9 @@ class SignUp extends Component {
       body: JSON.stringify(this.state)
     })
       .then(res => res.json())
-      .then(
-        res => this.setState({ flash: res.flash }),
-        err => this.setState({ flash: err.flash })
-      );
+      .then(res => res.json())
+      .then(res => this.setState({ flash: res.flash }))
+      .catch(err => this.setState({ flash: err.flash }));
   };
   render() {
     return (

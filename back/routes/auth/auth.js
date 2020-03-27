@@ -6,17 +6,16 @@ const connection = require("../../helpers/db");
   res.send("I am in POST signup");
 }); */
 authRouter.post("/signup", (req, res, next) => {
-  const formData = req.body;
-  connection.query("INSERT INTO users SET ?", formData, (err, results) => {
-    if (error) res.status(500).json({ flash: error.message });
-    else res.status(200).json({ flash: "User has been signed up!" });
-    /*   if (err) {
-      res.status(500).send(err);
-      res.end();
+  const { flash, ...formData } = req.body;
+  connection.query("INSERT INTO users SET ?", formData, (err, res) => {
+    if (err) {
+      res.send(console.log(err));
+      //res.status(500).json({ flash: err.message });
+      //res.end();
     } else {
-      res.status(200).json(results);
-      res.end();
-    } */
+      res.status(200).json({ flash: "User has been signed up!" });
+      //res.end();
+    }
   });
 });
 module.exports = {
