@@ -37,6 +37,7 @@ class SignUp extends Component {
     });
   }; */
   handleSubmit() {
+    event.preventDefault();
     fetch("http://localhost:5000/auth/signup", {
       method: "POST",
       headers: new Headers({
