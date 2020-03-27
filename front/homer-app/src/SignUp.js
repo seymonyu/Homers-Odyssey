@@ -6,7 +6,8 @@ class SignUp extends Component {
     password: "monPassw0rd",
     passwordcon: "monPassw0rd",
     name: "James",
-    lastname: "Bond"
+    lastname: "Bond",
+    flash: ""
   };
 
   updateEmailField = event => {
@@ -30,13 +31,25 @@ class SignUp extends Component {
       password: event.target.value
     });
   };
-  updatePasswordconField = event => {
+  /*  updatePasswordconField = event => {
     this.setState({
-      password: event.target.value
+      passwordcon: event.target.value
     });
-  };
+  }; */
   handleSubmit = () => {
     console.log(this.state);
+    fetch("/auth/signup", {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json"
+      }),
+      body: JSON.stringify(this.state)
+    })
+      .then(res => res.json())
+      .then(
+        res => this.setState({ flash: res.flash }),
+        err => this.setState({ flash: err.flash })
+      );
   };
   render() {
     return (
@@ -49,11 +62,11 @@ class SignUp extends Component {
             type="text"
             name="password"
           />
-          <input
+          {/*  <input
             onChange={this.updatePasswordconField}
             type="text"
             name="passwordcon"
-          />
+          /> */}
           <input onChange={this.updateNameField} type="text" name="name" />
           <input
             onChange={this.updateLastNameField}
