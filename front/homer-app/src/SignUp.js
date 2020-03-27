@@ -2,11 +2,11 @@ import React, { Component } from "react";
 
 class SignUp extends Component {
   state = {
-    email: "mon@email.com",
-    password: "monPassw0rd",
+    email: "",
+    password: "",
     // passwordcon: "monPassw0rd",
-    name: "James",
-    lastname: "Bond",
+    name: "",
+    lastname: "",
     flash: ""
   };
 
@@ -36,8 +36,7 @@ class SignUp extends Component {
       passwordcon: event.target.value
     });
   }; */
-  handleSubmit = e => {
-    e.preventdefault();
+  handleSubmit() {
     fetch("/auth/signup", {
       method: "POST",
       headers: new Headers({
@@ -49,12 +48,12 @@ class SignUp extends Component {
       .then(res => res.json())
       .then(res => this.setState({ flash: res.flash }))
       .catch(err => this.setState({ flash: err.flash }));
-  };
+  }
   render() {
     return (
       <div>
         <h1>{JSON.stringify(this.state, 1, 1)}</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <input onChange={this.updateEmailField} type="email" name="email" />
           <input
             onChange={this.updatePasswordField}
@@ -73,7 +72,8 @@ class SignUp extends Component {
             name="lastname"
           />
 
-          <input type="submit" value="Submit" />
+          {/*  <input type="submit" value="submit" /> */}
+          <button onClick={this.handleSubmit}></button>
         </form>
       </div>
     );
