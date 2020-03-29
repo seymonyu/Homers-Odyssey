@@ -36,7 +36,7 @@ class SignUp extends Component {
       passwordcon: event.target.value
     });
   }; */
-  handleSubmit() {
+  handleSubmit = event => {
     event.preventDefault();
     fetch("http://localhost:5000/auth/signup", {
       method: "POST",
@@ -48,11 +48,11 @@ class SignUp extends Component {
       .then(res => res.json())
       .then(res => this.setState({ flash: res.flash }))
       .catch(err => this.setState({ flash: err.flash }));
-  }
+  };
   render() {
     return (
       <div>
-        <h1>{JSON.stringify(this.state, 1, 1)}</h1>
+        <h1>{JSON.stringify(this.state)}</h1>
         <form>
           <input onChange={this.updateEmailField} type="email" name="email" />
           <input
