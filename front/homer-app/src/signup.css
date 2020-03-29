@@ -1,0 +1,19 @@
+.signup-cont {
+  height: 50vh;
+}
+
+.submit-form {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 100%;
+  justify-content: space-evenly;
+}
+.button-submit {
+  width: 30%;
+  margin-top: 10px;
+  color: salmon;
+}
+.snackbar {
+  margin-top: 200px;
+}

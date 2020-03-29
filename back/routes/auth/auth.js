@@ -36,10 +36,8 @@ authRouter.post("/signup", (req, res) => {
     if (err) {
       /* res.send(console.log(err)); */
       res.status(500).json({ flash: err.message });
-      res.end();
     } else {
       res.status(200).json({ flash: "User has been signed up!" });
-      res.end();
     }
   });
 });

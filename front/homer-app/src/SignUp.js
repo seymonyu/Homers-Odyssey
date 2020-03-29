@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import "./signup.css";
+import { Button, TextField, Snackbar } from "@material-ui/core";
 
 class SignUp extends Component {
   state = {
@@ -7,7 +9,8 @@ class SignUp extends Component {
     // passwordcon: "monPassw0rd",
     name: "",
     lastname: "",
-    flash: ""
+    flash: "",
+    open: false
   };
 
   updateEmailField = event => {
@@ -48,14 +51,22 @@ class SignUp extends Component {
       .then(res => res.json())
       .then(res => this.setState({ flash: res.flash }))
       .catch(err => this.setState({ flash: err.flash }));
+    this.setState({ open: true });
+  };
+  handleClose = () => {
+    this.setState({ open: false });
   };
   render() {
     return (
-      <div>
-        <h1>{JSON.stringify(this.state)}</h1>
-        <form>
-          <input onChange={this.updateEmailField} type="email" name="email" />
-          <input
+      <div className="signup-cont">
+        <h1>Sign Up Here</h1>
+        <form className="submit-form">
+          <TextField
+            onChange={this.updateEmailField}
+            type="email"
+            name="email"
+          />
+          <TextField
             onChange={this.updatePasswordField}
             type="text"
             name="password"
@@ -65,15 +76,26 @@ class SignUp extends Component {
             type="text"
             name="passwordcon"
           /> */}
-          <input onChange={this.updateNameField} type="text" name="name" />
-          <input
+          <TextField onChange={this.updateNameField} type="text" name="name" />
+          <TextField
             onChange={this.updateLastNameField}
             type="text"
             name="lastname"
           />
 
           {/*  <input type="submit" value="submit" /> */}
-          <button onClick={this.handleSubmit}></button>
+          <Button className="button-submit" onClick={this.handleSubmit}>
+            Submit!
+          </Button>
+
+          <Snackbar
+            open={this.state.open}
+            onClose={this.handleClose}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.flash}</span>}
+          />
         </form>
       </div>
     );
