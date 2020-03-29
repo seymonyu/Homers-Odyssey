@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./signup.css";
-import { Button, TextField, Snackbar } from "@material-ui/core";
+import { Button, TextField, SnackbarContent } from "@material-ui/core";
 
 class SignUp extends Component {
   state = {
@@ -9,8 +9,8 @@ class SignUp extends Component {
     // passwordcon: "monPassw0rd",
     name: "",
     lastname: "",
-    flash: "",
-    open: false
+    flash: ""
+    /*  open: false */
   };
 
   updateEmailField = event => {
@@ -53,50 +53,50 @@ class SignUp extends Component {
       .catch(err => this.setState({ flash: err.flash }));
     this.setState({ open: true });
   };
-  handleClose = () => {
+  /*  handleClose = () => {
     this.setState({ open: false });
-  };
+  }; */
   render() {
     return (
       <div className="signup-cont">
-        <h1>Sign Up Here</h1>
+        {/*   <h1>Sign Up Here</h1> */}
         <form className="submit-form">
           <TextField
-            onChange={this.updateEmailField}
+            label="email"
             type="email"
             name="email"
+            onChange={this.updateEmailField}
           />
           <TextField
-            onChange={this.updatePasswordField}
+            label="password"
             type="text"
             name="password"
-          />
-          {/*  <input
-            onChange={this.updatePasswordconField}
-            type="text"
-            name="passwordcon"
-          /> */}
-          <TextField onChange={this.updateNameField} type="text" name="name" />
-          <TextField
-            onChange={this.updateLastNameField}
-            type="text"
-            name="lastname"
+            onChange={this.updatePasswordField}
           />
 
-          {/*  <input type="submit" value="submit" /> */}
+          <TextField
+            label="name"
+            type="text"
+            name="name"
+            onChange={this.updateNameField}
+          />
+          <TextField
+            label="lastname"
+            type="text"
+            name="lastname"
+            onChange={this.updateLastNameField}
+          />
           <Button className="button-submit" onClick={this.handleSubmit}>
             Submit!
           </Button>
-
-          <Snackbar
-            open={this.state.open}
-            onClose={this.handleClose}
-            ContentProps={{
-              "aria-describedby": "message-id"
-            }}
-            message={<span id="message-id">{this.state.flash}</span>}
-          />
         </form>
+        <SnackbarContent
+          className="snackbar"
+          /* open={this.state.open}*/
+          onClose={this.handleClose}
+          anchorOrigin={"bottom, center"}
+          message={<span id="message-id">{this.state.flash}</span>}
+        />
       </div>
     );
   }
