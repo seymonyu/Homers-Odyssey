@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import "./signup.css";
+import { Link, Redirect } from "react-router-dom";
 import { Button, TextField, SnackbarContent } from "@material-ui/core";
 
-class SignUp extends Component {
+class SignIn extends Component {
   state = {
     email: "",
     password: "",
-    // passwordcon: "monPassw0rd",
-    name: "",
-    lastname: "",
-    flash: ""
-    /*  open: false */
+    passwordcon: "",
+    signed: false
   };
 
   updateEmailField = event => {
@@ -19,30 +16,20 @@ class SignUp extends Component {
     });
   };
 
-  updateNameField = event => {
-    this.setState({
-      name: event.target.value
-    });
-  };
-  updateLastNameField = event => {
-    this.setState({
-      lastname: event.target.value
-    });
-  };
   updatePasswordField = event => {
     this.setState({
       password: event.target.value
     });
   };
-  /*  updatePasswordconField = event => {
+  updatePasswordconField = event => {
     this.setState({
       passwordcon: event.target.value
     });
-  }; */
+  };
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ open: true });
-    fetch("http://localhost:5000/auth/signup", {
+    this.setState({ signed: true });
+    /*    fetch("http://localhost:5000/auth/signin", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json"
@@ -51,15 +38,16 @@ class SignUp extends Component {
     })
       .then(res => res.json())
       .then(res => this.setState({ flash: res.flash }))
-      .catch(err => this.setState({ flash: err.flash }));
+      .catch(err => this.setState({ flash: err.flash })); */
   };
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+
   render() {
+    if (this.state.signed === true) {
+      return <Redirect to="/profile" />;
+    }
     return (
       <div className="signup-cont">
-        {/*   <h1>Sign Up Here</h1> */}
+        <h1>Sign In</h1>
         <form className="submit-form">
           <TextField
             label="email"
@@ -75,30 +63,29 @@ class SignUp extends Component {
           />
 
           <TextField
-            label="name"
+            label="passwordcon"
             type="text"
-            name="name"
-            onChange={this.updateNameField}
+            name="passwordcon"
+            onChange={this.updatePasswordconField}
           />
-          <TextField
-            label="lastname"
-            type="text"
-            name="lastname"
-            onChange={this.updateLastNameField}
-          />
-          <Button className="button-submit" onClick={this.handleSubmit}>
+
+          <Button
+            color="secondary"
+            variant="contained"
+            className="button-submit"
+            onClick={this.handleSubmit}
+          >
             Submit!
           </Button>
         </form>
-        <SnackbarContent
-          className="snackbar"
-          open={this.state.open}
-          onClose={this.handleClose}
-          anchorOrigin={"bottom, center"}
-          message={<span id="message-id">{this.state.flash}</span>}
-        />
+        <Link
+          to="/signup"
+          style={{ color: "inherit", textDecoration: "inherit" }}
+        >
+          Sign Up
+        </Link>
       </div>
     );
   }
 }
-export default SignUp;
+export default SignIn;
