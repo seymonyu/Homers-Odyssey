@@ -41,6 +41,7 @@ class SignUp extends Component {
   }; */
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ open: true });
     fetch("http://localhost:5000/auth/signup", {
       method: "POST",
       headers: new Headers({
@@ -51,11 +52,10 @@ class SignUp extends Component {
       .then(res => res.json())
       .then(res => this.setState({ flash: res.flash }))
       .catch(err => this.setState({ flash: err.flash }));
-    this.setState({ open: true });
   };
-  /*  handleClose = () => {
+  handleClose = () => {
     this.setState({ open: false });
-  }; */
+  };
   render() {
     return (
       <div className="signup-cont">
@@ -92,7 +92,7 @@ class SignUp extends Component {
         </form>
         <SnackbarContent
           className="snackbar"
-          /* open={this.state.open}*/
+          open={this.state.open}
           onClose={this.handleClose}
           anchorOrigin={"bottom, center"}
           message={<span id="message-id">{this.state.flash}</span>}
