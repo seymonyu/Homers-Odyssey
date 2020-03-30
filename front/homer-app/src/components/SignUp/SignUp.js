@@ -65,6 +65,14 @@ class SignUp extends Component {
     return (
       <div className="signup-cont">
         <h1>Sign Up Here</h1>
+        <Link
+          to="/signin"
+          style={{ color: "inherit", textDecoration: "inherit" }}
+        >
+          Have an account?
+          <br />
+          Sign In
+        </Link>
         <form className="submit-form">
           <TextField
             label="email"
@@ -91,6 +99,7 @@ class SignUp extends Component {
             name="lastname"
             onChange={this.updateLastNameField}
           />
+
           <Button
             className="button-submit"
             color="secondary"
@@ -110,12 +119,6 @@ class SignUp extends Component {
             message={<span id="message-id">{this.state.flash}</span>}
           />
         </form>
-        <Link
-          to="/signin"
-          style={{ color: "inherit", textDecoration: "inherit" }}
-        >
-          Sign In
-        </Link>
       </div>
     );
   }

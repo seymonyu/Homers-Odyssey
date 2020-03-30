@@ -48,6 +48,12 @@ class SignIn extends Component {
     return (
       <div className="signup-cont">
         <h1>Sign In</h1>
+        <Link
+          to="/signup"
+          style={{ color: "inherit", textDecoration: "inherit" }}
+        >
+          or Sign Up
+        </Link>
         <form className="submit-form">
           <TextField
             label="email"
@@ -78,12 +84,6 @@ class SignIn extends Component {
             Submit!
           </Button>
         </form>
-        <Link
-          to="/signup"
-          style={{ color: "inherit", textDecoration: "inherit" }}
-        >
-          Sign Up
-        </Link>
       </div>
     );
   }

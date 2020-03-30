@@ -7,6 +7,19 @@ const app = express();
 const { authRouter } = require("./routes/auth/auth");
 const cors = require("cors");
 
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+      session: false
+    },
+    function(email, password, cb) {
+      //Your code here
+    }
+  )
+);
+
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
