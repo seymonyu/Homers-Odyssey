@@ -29,6 +29,7 @@ class SignIn extends Component {
       email: this.state.email,
       password: this.state.password
     };
+
     fetch("/auth/signin", {
       method: "POST",
       headers: new Headers({

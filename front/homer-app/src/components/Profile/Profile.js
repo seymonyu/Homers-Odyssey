@@ -10,19 +10,19 @@ class Profile extends Component {
       email: "roelofjansijbring@hotmail.com",
       name: "iloveseyma",
       lastname: "Sijbring",
-      signout: false
+      signed: false
     }
   };
 
   handleSignout = event => {
     event.preventDefault();
     this.setState({
-      signout: true
+      signed: true
     });
   };
 
   render() {
-    if (this.state.signout === true) {
+    if (this.state.signed === true) {
       return <Redirect to="/signin" />;
     }
     return (

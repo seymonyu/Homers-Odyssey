@@ -1,34 +1,37 @@
+require("dotenv").config();
 const express = require("express");
 const authRouter = express.Router();
-const connection = require("../../helpers/db");
-const bcrypt = require("bcrypt");
+const connection = require("../../helpers/db.js");
+
 const passport = require("passport");
-const jwt = require("jsonwebtoken");
 const LocalStrategy = require("passport-local").Strategy;
+
+const bcrypt = require("bcryptjs");
+
 const passportJWT = require("passport-jwt");
 const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
-require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
 authRouter.use(passport.initialize());
 
-authRouter.post("/signup", (req, res) => {
-  const data = req.body;
-  const name = data.name;
-  const lastname = data.lastname;
-  const password = data.password;
-  const email = data.email;
-  const flash = data.flash;
+authRouter.post("/signup", (req, res, next) => {
+  const { flash, open, ...newUser } = req.body;
+  const email = req.body.email;
+  const password = req.body.password;
+  const name = req.body.name;
+  const lastname = req.body.lastname;
   const saltRounds = 10;
 
   bcrypt.hash(password, saltRounds, function(err, hash) {
     connection.query(
       `INSERT INTO users (email, password, name, lastname) VALUES (?,?,?,?)`,
       [email, hash, name, lastname, flash],
-      (error, results) => {
-        if (error) {
-          res.status(500).send(console.log(error));
+      (err, results) => {
+        if (err) {
+          res.status(500).json({ flash: err.message });
         } else {
-          res.json({ flash: "You were sign in" });
+          res.status(200).json({ flash: "You were signed up" });
         }
       }
     );
@@ -47,30 +50,55 @@ passport.use(
         "SELECT * FROM users WHERE email= ?",
         [email],
 
-        function(err, comeback) {
+        async function(err, results) {
           if (err) {
             return done(err);
           }
-          if (!comeback[0]) {
-            return done(false, { message: "there is no matching email" });
+          if (!results[0]) {
+            return done(null, false, { message: "there is no matching email" });
           }
 
-          const passwordMatching = bcrypt.compare(
+          const passwordMatching = await bcrypt.compare(
             password,
-            comeback[0].password
+            results[0].password
           );
           if (!passwordMatching) {
-            return done(false, { message: "the password is not valid" });
+            return done(null, false, { message: "the password is not valid" });
           }
-          return done(null, comeback[0]);
+          return done(null, results[0]);
         }
       );
     }
   )
 );
-authRouter.post("/signin", function(req, res) {
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.ACCESS_TOKEN_SECRET
+    },
+    function(jwtPayload, done) {
+      connection.query(
+        "SELECT * FROM users WHERE email = ?",
+
+        [jwtPayload.email],
+        function(err, results) {
+          if (err) {
+            return done(err);
+          }
+          console.log(jwtPayload);
+          return done(null, results[0]);
+        }
+      );
+    }
+  )
+);
+
+authRouter.post("/signin", (req, res) => {
   passport.authenticate("local", (err, user, info) => {
-    if (err) return res.status(500).send(err);
+    if (err) return;
+
+    res.status(500).send(err);
     if (!user) return res.status(400).json({ message: info.message });
     if (user.hasOwnProperty("email")) {
       const token = jwt.sign(

@@ -11,7 +11,7 @@ const flash = require("express-flash");
 const bcrypt = require("bcrypt");
 LocalStrategy = require("passport-local").Strategy;
 
-passport.use(
+/* passport.use(
   new LocalStrategy(
     {
       usernameField: "email",
@@ -33,7 +33,7 @@ passport.use(
       });
     }
   )
-);
+); */
 
 app.use(cors());
 app.use(morgan("dev"));
