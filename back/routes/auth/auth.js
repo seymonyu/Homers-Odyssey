@@ -8,6 +8,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
 const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
+require("dotenv").config();
 authRouter.use(passport.initialize());
 
 authRouter.post("/signup", (req, res) => {
@@ -38,18 +39,30 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: "user[email]",
-      passwordField: "user[password]"
+      passwordField: "user[password]",
+      session: true
     },
     function(email, password, done) {
       connection.query(
-        `INSERT INTO users (email, password, name, lastname) VALUES (?,?,?,?)`,
+        "SELECT * FROM users WHERE email= ?",
         [email],
-        (error, results) => {
-          if (error) {
-            res.status(500).send(console.log(error));
-          } else {
-            res.json({ flash: "You were sign in" });
+
+        function(err, comeback) {
+          if (err) {
+            return done(err);
           }
+          if (!comeback[0]) {
+            return done(false, { message: "there is no matching email" });
+          }
+
+          const passwordMatching = bcrypt.compare(
+            password,
+            comeback[0].password
+          );
+          if (!passwordMatching) {
+            return done(false, { message: "the password is not valid" });
+          }
+          return done(null, comeback[0]);
         }
       );
     }
@@ -59,9 +72,25 @@ authRouter.post("/signin", function(req, res) {
   passport.authenticate("local", (err, user, info) => {
     if (err) return res.status(500).send(err);
     if (!user) return res.status(400).json({ message: info.message });
-    return res.json({ user });
+    if (user.hasOwnProperty("email")) {
+      const token = jwt.sign(
+        JSON.stringify(user),
+        process.env.ACCESS_TOKEN_SECRET
+      );
+
+      return res.send({ user, token });
+    }
+    return res.send(user);
   })(req, res);
 });
+
+authRouter.get(
+  "/profile",
+  passport.authenticate("jwt", { session: false }),
+  function(req, res) {
+    res.send(req.user);
+  }
+);
 module.exports = {
   authRouter
 };

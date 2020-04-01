@@ -16,26 +16,26 @@ passport.use(
         "SELECT * FROM users WHERE email = ?",
 
         [email],
-        async function(err, results) {
+        async function(err, callback) {
           if (err) {
             return done(err + "I am here");
           }
-          if (!results[0]) {
+          if (!callback[0]) {
             console.log("not valid email");
             return done(null, false, { message: "email not valid" });
           }
 
-          const validPassword = await bcrypt.compare(
+          const passwordMatching = await bcrypt.compare(
             password,
-            results[0].password
+            callback[0].password
           );
 
-          if (!validPassword) {
+          if (!passwordMatching) {
             console.log("invalid password");
             return done(null, false, { message: "Password is invalid" });
           }
 
-          return done(null, results[0]);
+          return done(null, callback[0]);
         }
       );
     }

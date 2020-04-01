@@ -4,10 +4,11 @@ import { Button, TextField } from "@material-ui/core";
 
 class SignIn extends Component {
   state = {
-    email: "",
-    password: "",
-    passwordcon: "",
-    signed: false
+    email: "roelofjansijbring@hotmail.com",
+    password: "iloveseyma",
+    signed: false,
+    flash: "",
+    open: false
   };
 
   updateEmailField = event => {
@@ -21,25 +22,36 @@ class SignIn extends Component {
       password: event.target.value
     });
   };
-  updatePasswordconField = event => {
-    this.setState({
-      passwordcon: event.target.value
-    });
-  };
+
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ signed: true });
-    /*    fetch("http://localhost:5000/auth/signin", {
+    const user = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    fetch("/auth/signin", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json"
       }),
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(user)
     })
       .then(res => res.json())
-      .then(res => this.setState({ flash: res.flash }))
-      .catch(err => this.setState({ flash: err.flash })); */
+      .then(data => {
+        if (data.hasOwnProperty("user")) {
+          this.setState({ signed: true });
+          console.log(data.token);
+        } else {
+          this.setState({ flash: data.message });
+          console.log(this.state.flash);
+        }
+      })
+      .catch(err => this.setState({ flash: err.flash }));
+    this.setState({ open: true });
   };
+  handleClose() {
+    this.setState({ open: false });
+  }
 
   render() {
     if (this.state.signed === true) {
@@ -66,13 +78,6 @@ class SignIn extends Component {
             type="text"
             name="password"
             onChange={this.updatePasswordField}
-          />
-
-          <TextField
-            label="passwordcon"
-            type="text"
-            name="passwordcon"
-            onChange={this.updatePasswordconField}
           />
 
           <Button

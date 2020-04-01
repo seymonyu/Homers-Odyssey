@@ -8,13 +8,14 @@ const { authRouter } = require("./routes/auth/auth");
 const cors = require("cors");
 const passport = require("passport");
 const flash = require("express-flash");
+const bcrypt = require("bcrypt");
 LocalStrategy = require("passport-local").Strategy;
 
 passport.use(
   new LocalStrategy(
     {
-      username: "email",
-      password: "password",
+      usernameField: "email",
+      passwordField: "password",
       session: false
     },
     function(email, password, cb) {
