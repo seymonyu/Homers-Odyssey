@@ -6,16 +6,30 @@ const morgan = require("morgan");
 const app = express();
 const { authRouter } = require("./routes/auth/auth");
 const cors = require("cors");
+const passport = require("passport");
+const flash = require("express-flash");
+LocalStrategy = require("passport-local").Strategy;
 
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "email",
-      passwordField: "password",
+      username: "email",
+      password: "password",
       session: false
     },
     function(email, password, cb) {
-      //Your code here
+      User.findOne({ email: email }, function(err, user) {
+        if (err) {
+          return cb(err);
+        }
+        if (!user) {
+          return cb(null, false);
+        }
+        if (!user.verifyPassword(password)) {
+          return cb(null, false);
+        }
+        return cb(null, user);
+      });
     }
   )
 );

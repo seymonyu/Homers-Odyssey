@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Button, TextField, SnackbarContent } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 
 class SignIn extends Component {
   state = {
