@@ -7,33 +7,31 @@ class SignUp extends Component {
   state = {
     email: "",
     password: "",
-    // passwordcon: "monPassw0rd",
     name: "",
     lastname: "",
-    open: false,
     flash: "",
-    signup: false
+    open: false,
   };
 
-  updateEmailField = event => {
+  updateEmailField = (event) => {
     this.setState({
-      email: event.target.value
+      email: event.target.value,
     });
   };
 
-  updateNameField = event => {
+  updateNameField = (event) => {
     this.setState({
-      name: event.target.value
+      name: event.target.value,
     });
   };
-  updateLastNameField = event => {
+  updateLastNameField = (event) => {
     this.setState({
-      lastname: event.target.value
+      lastname: event.target.value,
     });
   };
-  updatePasswordField = event => {
+  updatePasswordField = (event) => {
     this.setState({
-      password: event.target.value
+      password: event.target.value,
     });
   };
   /*  updatePasswordconField = event => {
@@ -41,25 +39,26 @@ class SignUp extends Component {
       passwordcon: event.target.value
     });
   }; */
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ signup: true });
     fetch("http://localhost:5000/auth/signup", {
       method: "POST",
       headers: new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       }),
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(this.state),
     })
-      .then(res => res.json())
-      .then(res => this.setState({ flash: res.flash }))
-      .catch(err => this.setState({ flash: err.flash }));
+      .then((res) => res.json())
+      .then((res) => this.setState({ flash: res.flash }))
+      .catch((err) => this.setState({ flash: err.flash }));
+    this.setState({ open: true });
   };
   handleClose = () => {
-    this.setState({ signup: false });
+    this.setState({ open: false });
   };
   render() {
-    if (this.state.signup === true) {
+    if (this.state.open === true) {
       return <Redirect to="/profile" />;
     }
     return (
@@ -111,10 +110,10 @@ class SignUp extends Component {
 
           <SnackbarContent
             className="snackbar"
-            open={this.state.signup}
+            open={this.state.open}
             onClose={this.handleClose}
             ContentProps={{
-              "aria-describedby": "message-id"
+              "aria-describedby": "message-id",
             }}
             message={<span id="message-id">{this.state.flash}</span>}
           />

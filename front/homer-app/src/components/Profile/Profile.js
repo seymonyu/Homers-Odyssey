@@ -10,19 +10,19 @@ class Profile extends Component {
       email: "roelofjansijbring@hotmail.com",
       name: "iloveseyma",
       lastname: "Sijbring",
-      signed: false
-    }
+      signin: false,
+    },
   };
 
-  handleSignout = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     this.setState({
-      signed: true
+      signin: true,
     });
   };
 
   render() {
-    if (this.state.signed === true) {
+    if (this.state.signin === true) {
       return <Redirect to="/signin" />;
     }
     return (
@@ -51,7 +51,7 @@ class Profile extends Component {
           color="secondary"
           variant="contained"
           className="signin-button"
-          onClick={this.handleSignout}
+          onClick={this.handleSubmit}
         >
           Sign Out
         </Button>

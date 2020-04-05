@@ -1,61 +1,60 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Snackbar } from "@material-ui/core";
 
 class SignIn extends Component {
   state = {
-    email: "roelofjansijbring@hotmail.com",
-    password: "iloveseyma",
-    signed: false,
+    email: "mon@email.com",
+    password: "monPassw0rd",
+    signin: false,
     flash: "",
-    open: false
+    open: false,
   };
 
-  updateEmailField = event => {
+  updateEmailField = (event) => {
     this.setState({
-      email: event.target.value
+      email: event.target.value,
     });
   };
 
-  updatePasswordField = event => {
+  updatePasswordField = (event) => {
     this.setState({
-      password: event.target.value
+      password: event.target.value,
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     const user = {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
 
-    fetch("/auth/signin", {
+    fetch("http://localhost:5000/auth/signin", {
       method: "POST",
       headers: new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       }),
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.hasOwnProperty("user")) {
-          this.setState({ signed: true });
+          this.setState({ signin: true });
           console.log(data.token);
         } else {
           this.setState({ flash: data.message });
           console.log(this.state.flash);
         }
       })
-      .catch(err => this.setState({ flash: err.flash }));
+      .catch((err) => this.setState({ flash: err.flash }));
     this.setState({ open: true });
   };
-  handleClose() {
+  handleClose = () => {
     this.setState({ open: false });
-  }
-
+  };
   render() {
-    if (this.state.signed === true) {
+    if (this.state.signin === true) {
       return <Redirect to="/profile" />;
     }
     return (
@@ -89,6 +88,14 @@ class SignIn extends Component {
           >
             Submit!
           </Button>
+          <Snackbar
+            open={this.state.open}
+            onClose={this.handleClose}
+            ContentProps={{
+              "aria-describedby": "message-id",
+            }}
+            message={<span id="message-id">{this.state.flash}</span>}
+          />
         </form>
       </div>
     );
