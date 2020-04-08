@@ -7,9 +7,9 @@ import { Redirect } from "react-router-dom";
 class Profile extends Component {
   state = {
     profile: {
-      email: "roelofjansijbring@hotmail.com",
-      name: "iloveseyma",
-      lastname: "Sijbring",
+      email: "",
+      name: "",
+      lastname: "",
       signin: false,
     },
   };

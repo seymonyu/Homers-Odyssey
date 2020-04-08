@@ -41,10 +41,8 @@ class SignIn extends Component {
       .then((data) => {
         if (data.hasOwnProperty("user")) {
           this.setState({ signin: true });
-          console.log(data.token);
         } else {
           this.setState({ flash: data.message });
-          console.log(this.state.flash);
         }
       })
       .catch((err) => this.setState({ flash: err.flash }));
