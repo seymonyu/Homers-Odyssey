@@ -101,9 +101,10 @@ passport.use(
   )
 );
 
-authRouter.post("/signin", (req, res) => {
+authRouter.post("/signin", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
+      console.log("this is the error space");
       return res.status(500).send(err);
     }
     if (!user) return res.status(400).json({ message: info.message });
@@ -112,13 +113,12 @@ authRouter.post("/signin", (req, res) => {
         JSON.stringify(user),
         process.env.ACCESS_TOKEN_SECRET
       );
-
       console.log(token);
+      return res.send({ user, token, message: "user successful" });
     }
     return res.send(user);
   })(req, res);
 });
-
 authRouter.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
@@ -126,6 +126,7 @@ authRouter.get(
     res.send(req.user);
   }
 );
+
 module.exports = {
   authRouter,
 };
