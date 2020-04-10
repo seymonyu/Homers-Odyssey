@@ -3,16 +3,14 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
 export default function (ComposedComponent) {
-  class NoAuthentication extends Component {
+  class NotAuthentication extends Component {
     componentWillMount() {
       if (this.props.authenticated) {
-        console.log("I am at component did mount - no auth");
         this.props.history.push("/profile");
       }
     }
     componentWillUpdate() {
       if (this.props.authenticated) {
-        console.log("I am at component did update - no auth");
         this.props.history.push("/profile");
       }
     }
@@ -24,5 +22,5 @@ export default function (ComposedComponent) {
     return { authenticated: state.auth.token ? true : false };
   }
 
-  return connect(mapStateToProps)(withRouter(NoAuthentication));
+  return connect(mapStateToProps)(withRouter(NotAuthentication));
 }
