@@ -5,14 +5,20 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "../src/index.css";
 import { BrowserRouter } from "react-router-dom";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import allReducers from "./reducers/index";
 
+const store = createStore(allReducers);
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      {" "}
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <React.StrictMode>
+      <BrowserRouter>
+        {" "}
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
+  </Provider>,
   document.getElementById("root")
 );
 

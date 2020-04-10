@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import "./signup.css";
-import { Button, TextField, SnackbarContent } from "@material-ui/core";
 import { Link, Redirect } from "react-router-dom";
+import { Button, TextField, Snackbar } from "@material-ui/core";
+import { connect } from "react-redux";
 
-class SignUp extends Component {
+class SignIn extends Component {
   state = {
-    email: "",
-    password: "",
-    name: "",
-    lastname: "",
+    email: "mon@email.com",
+    password: "monPassw0rd",
+    signin: false,
     flash: "",
     open: false,
   };
@@ -19,58 +18,59 @@ class SignUp extends Component {
     });
   };
 
-  updateNameField = (event) => {
-    this.setState({
-      name: event.target.value,
-    });
-  };
-  updateLastNameField = (event) => {
-    this.setState({
-      lastname: event.target.value,
-    });
-  };
   updatePasswordField = (event) => {
     this.setState({
       password: event.target.value,
     });
   };
-  /*  updatePasswordconField = event => {
-    this.setState({
-      passwordcon: event.target.value
-    });
-  }; */
+
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({ signup: true });
-    fetch("http://localhost:5000/auth/signup", {
+    const user = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+
+    fetch("http://localhost:5000/auth/signin", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
       }),
-      body: JSON.stringify(this.state),
+      body: JSON.stringify(user),
     })
       .then((res) => res.json())
-      .then((res) => this.setState({ flash: res.flash }))
+      .then((data) => {
+        if (data.hasOwnProperty("user")) {
+          this.props.dispatch({
+            type: "CREATE_SESSION",
+            user: data.user,
+            token: data.token,
+          });
+          this.setState({ flash: data.message, signin: true });
+          console.log(data);
+        } else {
+          this.setState({ flash: data.message, signin: true });
+          console.log(this.state.flash);
+        }
+      })
       .catch((err) => this.setState({ flash: err.flash }));
     this.setState({ open: true });
   };
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, signin: false });
   };
   render() {
-    if (this.state.open === true) {
+    if (this.state.signin === true) {
       return <Redirect to="/profile" />;
     }
     return (
       <div className="signup-cont">
-        <h1>Sign Up Here</h1>
+        <h1>Sign In</h1>
         <Link
-          to="/signin"
+          to="/signup"
           style={{ color: "inherit", textDecoration: "inherit" }}
         >
-          Have an account?
-          <br />
-          Sign In
+          or Sign Up
         </Link>
         <form className="submit-form">
           <TextField
@@ -86,30 +86,15 @@ class SignUp extends Component {
             onChange={this.updatePasswordField}
           />
 
-          <TextField
-            label="name"
-            type="text"
-            name="name"
-            onChange={this.updateNameField}
-          />
-          <TextField
-            label="lastname"
-            type="text"
-            name="lastname"
-            onChange={this.updateLastNameField}
-          />
-
           <Button
-            className="button-submit"
             color="secondary"
             variant="contained"
+            className="button-submit"
             onClick={this.handleSubmit}
           >
             Submit!
           </Button>
-
-          <SnackbarContent
-            className="snackbar"
+          <Snackbar
             open={this.state.open}
             onClose={this.handleClose}
             ContentProps={{
@@ -122,5 +107,9 @@ class SignUp extends Component {
     );
   }
 }
-
-export default SignUp;
+function mapStateToProps(state) {
+  return {
+    flash: state.auth.token,
+  };
+}
+export default connect(mapStateToProps)(SignIn);

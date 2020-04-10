@@ -4,16 +4,34 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 class Profile extends Component {
   state = {
     profile: {
       email: "",
       name: "",
       lastname: "",
-      signin: false,
     },
+    signin: false,
   };
-
+  componentDidMount() {
+    if (this.props.token) {
+      fetch("/auth/profile", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + this.props.token,
+        },
+      })
+        .then((res) => {
+          if (res.ok) return res.json();
+          else throw new Error(res.statusText);
+        })
+        .then((res) => {
+          this.setState({ profile: res });
+        })
+        .catch();
+    }
+  }
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({
@@ -51,6 +69,7 @@ class Profile extends Component {
           color="secondary"
           variant="contained"
           className="signin-button"
+          value="submit"
           onClick={this.handleSubmit}
         >
           Sign Out
@@ -59,5 +78,8 @@ class Profile extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return { token: state.auth.token };
+};
 
-export default Profile;
+export default connect(mapStateToProps)(Profile);
