@@ -26,7 +26,7 @@ app.get("/profile", passport.authenticate("jwt", { session: false }), function (
 });
 
 app.get("/", (req, res) => {
-  res.send("youhou");
+  res.send("SEYMONYU");
 });
 /// in case path is not found, return the 'Not Found' 404 code
 app.use(function (req, res, next) {

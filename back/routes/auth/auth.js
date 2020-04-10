@@ -39,9 +39,11 @@ passport.use(
     {
       usernameField: "email",
       passwordField: "password",
-      session: false,
+      session: true,
     },
     function (email, password, done) {
+      console.log("email=" + email);
+      console.log("password=" + password);
       connection.query(
         "SELECT * FROM users WHERE email= ?",
         [email],
@@ -63,7 +65,10 @@ passport.use(
               message: "The password is not correct!",
             });
           }
-          return done(null, results[0]);
+          const user = {
+            email: results[0].email,
+          };
+          return done(null, user);
         }
       );
     }
@@ -84,8 +89,12 @@ passport.use(
           if (err) {
             return done(err);
           }
-          console.log(jwtPayload);
-          return done(null, results[0]);
+          const user = {
+            email: results[0].email,
+            name: results[0].name,
+            lastname: results[0].lastname,
+          };
+          return done(null, user);
         }
       );
     }
@@ -104,7 +113,7 @@ authRouter.post("/signin", (req, res) => {
         process.env.ACCESS_TOKEN_SECRET
       );
 
-      return res.send({ user, token });
+      console.log(token);
     }
     return res.send(user);
   })(req, res);
