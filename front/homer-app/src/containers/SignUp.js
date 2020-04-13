@@ -42,7 +42,7 @@ class SignUp extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ signup: true });
-    fetch("http://localhost:5000/auth/signup", {
+    fetch("/auth/signup", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",

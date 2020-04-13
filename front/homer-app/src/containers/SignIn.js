@@ -107,9 +107,9 @@ class SignIn extends Component {
     );
   }
 }
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     flash: state.auth.token,
   };
-}
+};
 export default connect(mapStateToProps)(SignIn);
